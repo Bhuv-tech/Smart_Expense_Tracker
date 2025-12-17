@@ -126,3 +126,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'expense_list'
 LOGOUT_REDIRECT_URL = '/login/'
+
+allowed_hosts = ['*']
+
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+DEBUG = False
