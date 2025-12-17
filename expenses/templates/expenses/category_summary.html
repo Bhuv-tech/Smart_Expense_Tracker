@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Category Summary</title>
+</head>
+<body>
+
+<h1>📊 Category-wise Expense Summary</h1>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Category</th>
+        <th>Total Amount</th>
+    </tr>
+
+    {% for item in category_expenses %}
+    <tr>
+        <td>{{ item.category }}</td>
+        <td>₹ {{ item.total }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<a href="{% url 'expense_list' %}">⬅ Back to Expenses</a>
+
+</body>
+</html>

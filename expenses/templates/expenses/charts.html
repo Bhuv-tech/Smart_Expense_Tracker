@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h1>📊 Expense Analytics</h1>
+
+<canvas id="categoryChart" width="150" height="150"></canvas>
+<br><br>
+<canvas id="monthlyChart" width="150" height="150"></canvas>
+
+<!-- DATA SCRIPT (MUST COME FIRST) -->
+<script id="chart-data" type="application/json">
+{
+    "categories": {{ categories|safe }},
+    "category_totals": {{ category_totals|safe }},
+    "months": {{ months|safe }},
+    "month_totals": {{ month_totals|safe }}
+}
+</script>
+
+<!-- MAIN JS (MUST COME AFTER) -->
+<script>
+    const chartDataElement = document.getElementById('chart-data');
+
+    console.log(chartDataElement); // DEBUG
+
+    const chartData = JSON.parse(chartDataElement.textContent);
+
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'pie',
+        data: {
+            labels: chartData.categories,
+            datasets: [{
+                data: chartData.category_totals,
+                backgroundColor: ['red','blue','green','orange','purple']
+            }] 
+        }
+    });
+
+    new Chart(document.getElementById('monthlyChart'), {
+        type: 'bar',
+        data: {
+            labels: chartData.months,
+            datasets: [{
+                label: 'Monthly Expense',
+                data: chartData.month_totals
+            }]
+        }
+    });
+</script>
+
+</body>
+</html>

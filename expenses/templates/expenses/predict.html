@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Prediction</title>
+</head>
+<body>
+
+<h1>🔮 Expense Prediction</h1>
+
+{% if prediction %}
+    <h2>Predicted Expense for Next Month:</h2>
+    <p><strong>₹ {{ prediction }}</strong></p>
+{% else %}
+    <p>Not enough data to predict. Add more expenses.</p>
+{% endif %}
+
+<br>
+<a href="{% url 'expense_list' %}">⬅ Back</a>
+
+</body>
+</html>
