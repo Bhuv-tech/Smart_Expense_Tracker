@@ -55,6 +55,8 @@ def delete_expense(request, id):
     expense.delete()
     return redirect('expense_list')
    
+
+@login_required
 def monthly_summary(request):
     # Get only the current user's expenses
     user_expenses = Expense.objects.filter(user=request.user)
@@ -66,7 +68,7 @@ def monthly_summary(request):
         'monthly_totals': monthly_totals
     })
 
-
+@login_required
 def category_summary(request):
     # Filter expenses by current user
     category_expenses = Expense.objects.filter(user=request.user).values('category').annotate(
@@ -77,7 +79,7 @@ def category_summary(request):
         'category_expenses': category_expenses
     })
 
-
+@login_required
 def charts_view(request):
     # Filter expenses by current user
     category_data = Expense.objects.filter(user=request.user).values('category').annotate(
