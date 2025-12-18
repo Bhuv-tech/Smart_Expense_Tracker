@@ -3,16 +3,42 @@
 <head>
     <title>Expense Charts</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #7ad3e4, #e5e7eb);
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .chart-container {
+            width: 250px;   /* control size here */
+            height: 250px;
+            margin: 20px auto;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #041214;
+        }
+    </style>
 </head>
 <body>
 
 <h1>📊 Expense Analytics</h1>
 
-<canvas id="categoryChart" width="150" height="150"></canvas>
-<br><br>
-<canvas id="monthlyChart" width="150" height="150"></canvas>
+<div class="chart-container">
+    <canvas id="categoryChart"></canvas>
+</div>
 
-<!-- DATA SCRIPT (MUST COME FIRST) -->
+<div class="chart-container">
+    <canvas id="monthlyChart"></canvas>
+</div>
+
 <script id="chart-data" type="application/json">
 {
     "categories": {{ categories|safe }},
@@ -22,13 +48,10 @@
 }
 </script>
 
-<!-- MAIN JS (MUST COME AFTER) -->
 <script>
-    const chartDataElement = document.getElementById('chart-data');
-
-    console.log(chartDataElement); // DEBUG
-
-    const chartData = JSON.parse(chartDataElement.textContent);
+    const chartData = JSON.parse(
+        document.getElementById('chart-data').textContent
+    );
 
     new Chart(document.getElementById('categoryChart'), {
         type: 'pie',
@@ -36,8 +59,12 @@
             labels: chartData.categories,
             datasets: [{
                 data: chartData.category_totals,
-                backgroundColor: ['red','blue','green','orange','purple']
-            }] 
+                backgroundColor: ['red','teal','green','orange','purple']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 
@@ -49,9 +76,15 @@
                 label: 'Monthly Expense',
                 data: chartData.month_totals
             }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 </script>
+
+<a class="back-link" href="{% url 'expense_list' %}">⬅ Back to Expenses</a>
 
 </body>
 </html>

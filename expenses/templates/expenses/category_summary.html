@@ -1,28 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Category Summary</title>
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #7ad3e4;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1f2937;
+        }
+
+        .table-container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0fbbd5;
+            color: #ffffff;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .amount {
+            font-weight: bold;
+            color: #065f46;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #0fbbd5;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
 <h1>📊 Category-wise Expense Summary</h1>
 
-<table border="1" cellpadding="5">
-    <tr>
-        <th>Category</th>
-        <th>Total Amount</th>
-    </tr>
+<div class="table-container">
+    <table>
+        <tr>
+            <th>Category</th>
+            <th>Total Amount</th>
+        </tr>
 
-    {% for item in category_expenses %}
-    <tr>
-        <td>{{ item.category }}</td>
-        <td>₹ {{ item.total }}</td>
-    </tr>
-    {% endfor %}
-</table>
+        {% for item in category_expenses %}
+        <tr>
+            <td>{{ item.category }}</td>
+            <td class="amount">₹ {{ item.total }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 
-<br>
-<a href="{% url 'expense_list' %}">⬅ Back to Expenses</a>
+<a class="back-link" href="{% url 'expense_list' %}">
+    ⬅ Back to Expenses
+</a>
 
 </body>
 </html>

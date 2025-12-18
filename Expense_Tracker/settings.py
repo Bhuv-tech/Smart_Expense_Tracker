@@ -131,5 +131,3 @@ allowed_hosts = ['*']
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-DEBUG = False

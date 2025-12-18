@@ -1,37 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Monthly Summary</title>
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #7ad3e4;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            max-width: 650px;
+            margin: auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .total-box {
+            background: #ecfeff;
+            border-left: 6px solid #0fbbd5;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .total-amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0f766e;
+        }
+
+        h2 {
+            color: #374151;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0fbbd5;
+            color: #ffffff;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .amount {
+            font-weight: bold;
+            color: #065f46;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #08191c;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
 <h1>📊 Monthly Expense Summary</h1>
 
-<h2>Current Month Total</h2>
-<p>
-    ₹ {{ monthly_total|default:"0" }}
-</p>
+<div class="card">
 
-<hr>
+    <div class="total-box">
+        <h2>Current Month Total</h2>
+        <div class="total-amount">
+            ₹ {{ monthly_total|default:"0" }}
+        </div>
+    </div>
 
-<h2>Month-wise Breakdown</h2>
+    <h2>Month-wise Breakdown</h2>
 
-<table border="1" cellpadding="5">
-    <tr>
-        <th>Month</th>
-        <th>Total Expense</th>
-    </tr>
+    <table>
+        <tr>
+            <th>Month</th>
+            <th>Total Expense</th>
+        </tr>
 
-    {% for item in month_expenses %}
-    <tr>
-        <td>{{ item.date__month }}</td>
-        <td>₹ {{ item.total }}</td>
-    </tr>
-    {% endfor %}
-</table>
+        {% for item in month_expenses %}
+        <tr>
+            <td>{{ item.date__month }}</td>
+            <td class="amount">₹ {{ item.total }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-<br>
-<a href="{% url 'expense_list' %}">⬅ Back to Expenses</a>
+</div>
+
+<a class="back-link" href="{% url 'expense_list' %}">
+    ⬅ Back to Expenses
+</a>
 
 </body>
 </html>

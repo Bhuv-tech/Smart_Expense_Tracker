@@ -1,21 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Expense Prediction</title>
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #7ad3e4, #e5e7eb);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 16px;
+            width: 380px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .prediction-box {
+            background: #ecfeff;
+            border-left: 6px solid #06b6d4;
+            padding: 18px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .prediction-value {
+            font-size: 26px;
+            color: #0f766e;
+            font-weight: bold;
+        }
+
+        .warning-box {
+            background: #fff7ed;
+            border-left: 6px solid #f97316;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #9a3412;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #071e1d;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
-<h1>🔮 Expense Prediction</h1>
+<div class="card">
+    <h1>🔮 Expense Prediction</h1>
 
-{% if prediction %}
-    <h2>Predicted Expense for Next Month:</h2>
-    <p><strong>₹ {{ prediction }}</strong></p>
-{% else %}
-    <p>Not enough data to predict. Add more expenses.</p>
-{% endif %}
+    {% if prediction %}
+        <div class="prediction-box">
+            <p>Predicted Expense for Next Month</p>
+            <div class="prediction-value">
+                ₹ {{ prediction }}
+            </div>
+        </div>
+    {% else %}
+        <div class="warning-box">
+            <p>Not enough data to predict.<br>Add more expenses.</p>
+        </div>
+    {% endif %}
 
-<br>
-<a href="{% url 'expense_list' %}">⬅ Back</a>
+    <a href="{% url 'expense_list' %}">⬅ Back to Expenses</a>
+</div>
 
 </body>
 </html>
