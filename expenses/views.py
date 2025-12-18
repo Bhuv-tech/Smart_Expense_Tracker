@@ -56,27 +56,20 @@ def delete_expense(request, id):
     return redirect('expense_list')
    
 def monthly_summary(request):
-    current_month = now().month
-    current_year = now().year
+    # Get only the current user's expenses
+    user_expenses = Expense.objects.filter(user=request.user)
 
-    monthly_total = Expense.objects.filter(
-        date__month=current_month,
-        date__year=current_year
-    ).aggregate(total=Sum('amount'))
-
-    month_expenses = Expense.objects.filter(
-        date__year=current_year
-    ).values('date__month').annotate(
-        total=Sum('amount')
-    ).order_by('date__month')
+    # Calculate monthly totals
+    monthly_totals = user_expenses.values('date_month').annotate(total=Sum('amount')).order_by('date_month')
 
     return render(request, 'expenses/monthly_summary.html', {
-        'monthly_total': monthly_total['total'],
-        'month_expenses': month_expenses
+        'monthly_totals': monthly_totals
     })
 
+
 def category_summary(request):
-    category_expenses = Expense.objects.values('category').annotate(
+    # Filter expenses by current user
+    category_expenses = Expense.objects.filter(user=request.user).values('category').annotate(
         total=Sum('amount')
     ).order_by('-total')
 
@@ -84,12 +77,14 @@ def category_summary(request):
         'category_expenses': category_expenses
     })
 
+
 def charts_view(request):
-    category_data = Expense.objects.values('category').annotate(
+    # Filter expenses by current user
+    category_data = Expense.objects.filter(user=request.user).values('category').annotate(
         total=Sum('amount')
     )
 
-    monthly_data = Expense.objects.values('date__month').annotate(
+    monthly_data = Expense.objects.filter(user=request.user).values('date__month').annotate(
         total=Sum('amount')
     ).order_by('date__month')
 
