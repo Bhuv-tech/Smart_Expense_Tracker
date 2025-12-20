@@ -11,7 +11,7 @@ urlpatterns = [
     path('category-summary/', views.category_summary, name='category_summary'),
     path('charts/', views.charts_view, name='charts_view'),
     path('login/', auth_views.LoginView.as_view(template_name='expenses/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='expenses/logout.html'), name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('signup/', views.signup_view, name='signup'),
     path('predict/', views.predict_expense, name='predict_expense'),

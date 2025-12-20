@@ -2,89 +2,167 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Expense Prediction</title>
 
     <style>
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background: linear-gradient(135deg, #7ad3e4, #e5e7eb);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        :root{
+            --bg-start:#eff6ff;
+            --bg-end:#f8fafc;
+            --accent:#06b6d4;
+            --accent-dark:#0f766e;
+            --muted:#6b7280;
+            --card:#ffffff;
+            --danger:#f97316;
         }
 
-        .card {
-            background: #ffffff;
-            padding: 30px 40px;
-            border-radius: 16px;
-            width: 380px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        *{box-sizing:border-box}
+        body{
+            font-family: "Segoe UI", Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial;
+            margin:0;
+            background: linear-gradient(180deg,var(--bg-start),var(--bg-end));
+            color:#0f172a;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            padding:24px;
         }
 
-        h1 {
-            margin-bottom: 20px;
-            color: #1f2937;
+        .container{
+            max-width:960px;
+            margin:40px auto;
+            display:grid;
+            grid-template-columns:1fr;
+            gap:20px;
         }
 
-        .prediction-box {
-            background: #ecfeff;
-            border-left: 6px solid #06b6d4;
-            padding: 18px;
-            border-radius: 10px;
-            margin: 20px 0;
+        .header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:16px;
         }
 
-        .prediction-value {
-            font-size: 26px;
-            color: #0f766e;
-            font-weight: bold;
+        .title{
+            display:flex;
+            align-items:center;
+            gap:12px;
         }
 
-        .warning-box {
-            background: #fff7ed;
-            border-left: 6px solid #f97316;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            color: #9a3412;
+        .title h1{margin:0;font-size:20px}
+
+        .card{
+            background:var(--card);
+            border-radius:12px;
+            padding:22px;
+            box-shadow:0 8px 22px rgba(2,6,23,0.08);
         }
 
-        a {
-            display: inline-block;
-            margin-top: 15px;
-            text-decoration: none;
-            color: #071e1d;
-            font-weight: 600;
+        .prediction-area{
+            display:flex;
+            gap:20px;
+            align-items:center;
+            flex-wrap:wrap;
         }
 
-        a:hover {
-            text-decoration: underline;
+        .prediction-box{
+            flex:1 1 320px;
+            background:linear-gradient(180deg,rgba(6,182,212,0.06),rgba(6,182,212,0.02));
+            border-radius:10px;
+            padding:18px;
+            border-left:6px solid var(--accent);
+            min-width:220px;
+        }
+
+        .prediction-label{color:var(--muted);font-size:13px;margin-bottom:6px}
+
+        .prediction-value{
+            font-size:34px;
+            font-weight:700;
+            color:var(--accent-dark);
+        }
+
+        .info-box{
+            flex:0 0 220px;
+            background:#fff7ed;
+            border-radius:10px;
+            padding:12px;
+            border-left:6px solid var(--danger);
+            color:#92400e;
+            font-size:13px;
+        }
+
+        .actions{display:flex;gap:12px;align-items:center;margin-top:14px}
+
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:10px 14px;
+            border-radius:8px;
+            text-decoration:none;
+            font-weight:600;
+            cursor:pointer;
+            border:0;
+        }
+
+        .btn-primary{background:var(--accent);color:#fff}
+        .btn-ghost{background:transparent;color:var(--accent-dark);border:1px solid rgba(15,118,110,0.08)}
+
+        .small{font-size:13px;color:var(--muted)}
+
+        @media (max-width:600px){
+            .prediction-area{flex-direction:column}
+            .info-box{flex:1 1 auto}
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h1>🔮 Expense Prediction</h1>
-
-    {% if prediction %}
-        <div class="prediction-box">
-            <p>Predicted Expense for Next Month</p>
-            <div class="prediction-value">
-                ₹ {{ prediction }}
-            </div>
+<div class="container">
+    <div class="header">
+        <div class="title">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="6" fill="#06b6d4"/>
+                <path d="M7 13c1-2 2-3 4-4 2-1 4-1 5 1" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h1>Expense Prediction</h1>
         </div>
-    {% else %}
-        <div class="warning-box">
-            <p>Not enough data to predict.<br>Add more expenses.</p>
-        </div>
-    {% endif %}
+        <div class="small">Predict next month's expense based on your history</div>
+    </div>
 
-    <a href="{% url 'expense_list' %}">⬅ Back to Expenses</a>
+    <div class="card">
+        <div class="prediction-area">
+
+            {% if prediction %}
+                <div class="prediction-box" role="status" aria-live="polite">
+                    <div class="prediction-label">Predicted Expense • Next Month</div>
+                    <div class="prediction-value">₹ {{ prediction }}</div>
+                    <div class="small" style="margin-top:8px">This is an estimated value generated from your last few months of data.</div>
+                </div>
+
+                <div class="info-box" aria-hidden="false">
+                    <strong>Tip</strong>
+                    <p style="margin:8px 0 0;font-size:13px;color:#92400e">Add more entries for a better prediction or review category-wise spending in Charts.</p>
+                </div>
+
+            {% else %}
+                <div style="width:100%;">
+                    <div class="info-box" style="border-left:6px solid #f97316;">
+                        <strong>Not enough data</strong>
+                        <p style="margin:8px 0 0;font-size:13px;color:#92400e">Add at least two months of expenses to enable prediction.</p>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div class="actions">
+            <a class="btn btn-primary" href="{% url 'add_expense' %}">➕ Add Expense</a>
+            <a class="btn btn-ghost" href="{% url 'expense_list' %}">⬅ Back to Expenses</a>
+            <a class="btn btn-ghost" href="{% url 'charts' %}">📈 Charts</a>
+        </div>
+
+    </div>
 </div>
 
 </body>

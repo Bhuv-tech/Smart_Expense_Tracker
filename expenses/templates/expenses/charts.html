@@ -1,42 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Expense Charts</title>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background: linear-gradient(135deg, #7ad3e4, #e5e7eb);
-            margin: 0;
-            padding: 20px;
-            text-align: center;
+        :root{
+            --bg-start:#f8fafc;
+            --bg-end:#eef2ff;
+            --card:#ffffff;
+            --muted:#6b7280;
+            --accent:#0f766e;
         }
-        .chart-container {
-            width: 250px;   /* control size here */
-            height: 250px;
-            margin: 20px auto;
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family:"Segoe UI", Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial;
+            background: linear-gradient(180deg,var(--bg-start),var(--bg-end));
+            color:#071422;
+            -webkit-font-smoothing:antialiased;
+            padding:28px;
         }
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            text-decoration: none;
-            font-weight: 600;
-            color: #041214;
+
+        .container{
+            max-width:1100px;
+            margin:28px auto;
+            display:grid;
+            grid-template-columns:1fr;
+            gap:18px;
+        }
+
+        .header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:12px;
+        }
+
+        .title{display:flex;gap:10px;align-items:center}
+        .title h1{margin:0;font-size:20px}
+        .subtitle{color:var(--muted);font-size:13px}
+
+        .card{
+            background:var(--card);
+            border-radius:12px;
+            padding:18px;
+            box-shadow:0 8px 20px rgba(2,6,23,0.06);
+        }
+
+        .chart-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:20px;
+            align-items:start;
+        }
+
+        .chart-wrap{
+            min-height:300px;
+            position:relative;
+            padding:12px;
+            border-radius:10px;
+            background:linear-gradient(180deg,rgba(15,118,110,0.03),rgba(15,118,110,0.01));
+        }
+
+        canvas{width:100% !important;height:100% !important}
+
+        .legend{margin-top:8px;font-size:13px;color:var(--muted)}
+
+        .empty{padding:28px;text-align:center;color:var(--muted)}
+
+        .actions{display:flex;gap:12px;margin-top:12px}
+        .btn{background:var(--accent);color:#fff;padding:9px 12px;border-radius:8px;text-decoration:none;font-weight:600}
+        .btn-ghost{background:transparent;border:1px solid rgba(7,20,34,0.06);padding:9px 12px;border-radius:8px;text-decoration:none;color:var(--accent);font-weight:600}
+
+        @media (max-width:880px){
+            .chart-grid{grid-template-columns:1fr}
         }
     </style>
 </head>
 <body>
 
-<h1>📊 Expense Analytics</h1>
+<div class="container">
+    <div class="header">
+        <div class="title">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="6" fill="#0f766e"/>
+                <path d="M7 13c1-2 2-3 4-4 2-1 4-1 5 1" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div>
+                <h1>📊 Expense Analytics</h1>
+                <div class="subtitle">Category distribution and month-wise totals</div>
+            </div>
+        </div>
 
-<div class="chart-container">
-    <canvas id="categoryChart"></canvas>
-</div>
+        <div class="actions">
+            <a class="btn" href="{% url 'add_expense' %}">➕ Add Expense</a>
+            <a class="btn-ghost" href="{% url 'predict_expense' %}">🔮 Prediction</a>
+            <a class="btn-ghost" href="{% url 'expense_list' %}">⬅ Back</a>
+        </div>
+    </div>
 
-<div class="chart-container">
-    <canvas id="monthlyChart"></canvas>
+    <div class="card">
+        {% if categories|length and months|length %}
+            <div class="chart-grid" role="region" aria-label="Expense charts">
+                <div class="chart-wrap" aria-hidden="false">
+                    <canvas id="categoryChart" aria-label="Category distribution chart" role="img"></canvas>
+                    <div class="legend">Category breakdown (click legend to toggle)</div>
+                </div>
+
+                <div class="chart-wrap">
+                    <canvas id="monthlyChart" aria-label="Monthly totals chart" role="img"></canvas>
+                    <div class="legend">Monthly totals</div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty">
+                <strong>No chart data yet</strong>
+                <p>Add expenses to view charts and insights.</p>
+                <div style="margin-top:12px">
+                    <a class="btn" href="{% url 'add_expense' %}">➕ Add Expense</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 </div>
 
 <script id="chart-data" type="application/json">
@@ -49,42 +138,51 @@
 </script>
 
 <script>
-    const chartData = JSON.parse(
-        document.getElementById('chart-data').textContent
-    );
+    (function(){
+        const raw = JSON.parse(document.getElementById('chart-data').textContent || '{}');
+        const categories = raw.categories || [];
+        const category_totals = raw.category_totals || [];
+        const monthsRaw = raw.months || [];
+        const month_totals = raw.month_totals || [];
 
-    new Chart(document.getElementById('categoryChart'), {
-        type: 'pie',
-        data: {
-            labels: chartData.categories,
-            datasets: [{
-                data: chartData.category_totals,
-                backgroundColor: ['red','teal','green','orange','purple']
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const months = monthsRaw.map(m => (Number.isFinite(m) ? (monthNames[Number(m)-1] || m) : m));
 
-    new Chart(document.getElementById('monthlyChart'), {
-        type: 'bar',
-        data: {
-            labels: chartData.months,
-            datasets: [{
-                label: 'Monthly Expense',
-                data: chartData.month_totals
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
+        function currencyFormat(value){
+            try{
+                return new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(value);
+            }catch(e){
+                return '₹' + Number(value).toFixed(2);
+            }
         }
-    });
+
+        function generateColors(n){
+            const palette = ['#06b6d4','#0ea5a4','#38bdf8','#60a5fa','#7c3aed','#fb7185','#f97316','#f59e0b','#84cc16','#10b981'];
+            const out = [];
+            for(let i=0;i<n;i++) out.push(palette[i % palette.length]);
+            return out;
+        }
+
+        if(categories.length){
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctx, {
+                type:'pie',
+                data:{labels:categories,datasets:[{data:category_totals,backgroundColor:generateColors(categories.length)}]},
+                options:{responsive:true,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:function(ctx){return ctx.label+': '+currencyFormat(ctx.raw);}}}}
+            }});
+        }
+
+        if(months.length){
+            const ctx2 = document.getElementById('monthlyChart').getContext('2d');
+            new Chart(ctx2, {
+                type:'bar',
+                data:{labels:months,datasets:[{label:'Monthly Expense',data:month_totals,backgroundColor:generateColors(months.length)}]},
+                options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return currencyFormat(ctx.raw);}}}},scales:{y:{ticks:{callback:function(v){return '₹' + v;}}}}
+            }});
+        }
+
+    })();
 </script>
-
-<a class="back-link" href="{% url 'expense_list' %}">⬅ Back to Expenses</a>
 
 </body>
 </html>

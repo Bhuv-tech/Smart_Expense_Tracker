@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center" style="min-height:60vh;">
+    <div class="card text-center p-4" style="max-width:520px;width:100%;">
+        <div class="card-body">
+            <div class="mb-3">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="2" y="2" width="20" height="20" rx="6" fill="#0f766e"/>
+                    <path d="M9 12l2 2 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2 class="card-title">You are logged out</h2>
+            <p class="text-muted mb-3">Thanks for using Smart Expense Tracker. You have been successfully signed out.</p>
+
+            <div class="d-flex justify-content-center gap-2">
+                <a href="{% url 'login' %}" class="btn btn-primary">Log in again</a>
+                <a href="{% url 'expense_list' %}" class="btn btn-outline-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -2,125 +2,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Monthly Summary</title>
 
     <style>
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background: #7ad3e4;
-            margin: 0;
-            padding: 40px;
+        :root{--bg-start:#f8fafc;--bg-end:#eef2ff;--accent:#0f766e;--muted:#6b7280}
+        *{box-sizing:border-box}
+        body{
+            font-family:"Segoe UI", Roboto, system-ui, -apple-system, 'Helvetica Neue', Arial;
+            margin:0;
+            padding:28px;
+            background:linear-gradient(180deg,var(--bg-start),var(--bg-end));
+            color:#071422;
         }
 
-        h1 {
-            text-align: center;
-            color: #1f2937;
-            margin-bottom: 30px;
-        }
+        .container{max-width:900px;margin:36px auto}
+        .header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+        .header h1{margin:0;font-size:20px}
+        .subtitle{color:var(--muted);font-size:13px}
 
-        .card {
-            max-width: 650px;
-            margin: auto;
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
+        .card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 10px 24px rgba(2,6,23,0.06)}
 
-        .total-box {
-            background: #ecfeff;
-            border-left: 6px solid #0fbbd5;
-            padding: 18px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
+        .total-area{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+        .total-box{flex:1 1 280px;background:linear-gradient(180deg,rgba(6,118,110,0.04),rgba(6,118,110,0.01));padding:18px;border-radius:10px;border-left:6px solid var(--accent)}
+        .total-box h2{margin:0 0 6px 0;color:#0f2937;font-size:15px}
+        .total-amount{font-size:28px;font-weight:800;color:var(--accent)}
+        .small{color:var(--muted);font-size:13px}
 
-        .total-amount {
-            font-size: 28px;
-            font-weight: bold;
-            color: #0f766e;
-        }
+        .table-wrapper{margin-top:18px;overflow-x:auto}
+        table{width:100%;border-collapse:collapse;font-size:14px}
+        th,td{padding:12px;text-align:left}
+        th{background: #06b6d4;color:#fff;border-radius:6px}
+        tr{border-bottom:1px solid #eef2f6}
+        tr:hover{background:#f8faf9}
 
-        h2 {
-            color: #374151;
-            margin-bottom: 15px;
-        }
+        .amount{font-weight:700;color:var(--accent)}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .actions{display:flex;gap:10px;margin-top:16px}
+        .btn{display:inline-block;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:700}
+        .btn-primary{background:var(--accent);color:#fff}
+        .btn-ghost{background:transparent;border:1px solid rgba(7,20,34,0.06);color:var(--accent)}
 
-        th {
-            background: #0fbbd5;
-            color: #ffffff;
-            padding: 12px;
-            text-align: left;
-        }
-
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        tr:hover {
-            background: #f9fafb;
-        }
-
-        .amount {
-            font-weight: bold;
-            color: #065f46;
-        }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            text-decoration: none;
-            font-weight: 600;
-            color: #08191c;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
+        @media (max-width:680px){
+            .total-area{flex-direction:column;align-items:stretch}
         }
     </style>
 </head>
 <body>
 
-<h1>📊 Monthly Expense Summary</h1>
-
-<div class="card">
-
-    <div class="total-box">
-        <h2>Current Month Total</h2>
-        <div class="total-amount">
-            ₹ {{ monthly_total|default:"0" }}
+<div class="container">
+    <div class="header">
+        <div>
+            <h1>📊 Monthly Expense Summary</h1>
+            <div class="subtitle">Overview of your spending each month</div>
+        </div>
+        <div class="actions">
+            <a class="btn btn-primary" href="{% url 'add_expense' %}">➕ Add Expense</a>
+            <a class="btn btn-ghost" href="{% url 'charts' %}">📈 Charts</a>
+            <a class="btn btn-ghost" href="{% url 'expense_list' %}">⬅ Back</a>
         </div>
     </div>
 
-    <h2>Month-wise Breakdown</h2>
+    <div class="card">
+        <div class="total-area">
+            <div class="total-box" role="status" aria-live="polite">
+                <h2>Current Month Total</h2>
+                <div class="total-amount">₹ {{ monthly_total|floatformat:2 }}</div>
+                <div class="small" style="margin-top:8px">This is the total for the current month.</div>
+            </div>
 
-    <table>
-        <tr>
-            <th>Month</th>
-            <th>Total Expense</th>
-        </tr>
+            <div style="flex:1 1 260px;min-width:220px">
+                <h2 style="margin:0 0 8px 0">Last Months</h2>
+                <div class="small">See how your spending changed month-by-month.</div>
+            </div>
+        </div>
 
-        {% for item in month_expenses %}
-        <tr>
-            <td>{{ item.date__month }}</td>
-            <td class="amount">₹ {{ item.total }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+        <div class="table-wrapper">
+            {% if month_expenses|length %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Total Expense</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in month_expenses %}
+                    <tr>
+                        <td>Month {{ item.date__month }}</td>
+                        <td class="amount">₹ {{ item.total|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty" style="padding:18px;text-align:center;color:var(--muted);">
+                <strong>No monthly data yet</strong>
+                <p>Add expenses across a couple of months to see a month-wise summary.</p>
+                <div style="margin-top:12px">
+                    <a class="btn btn-primary" href="{% url 'add_expense' %}">➕ Add Expense</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
 
+    </div>
 </div>
-
-<a class="back-link" href="{% url 'expense_list' %}">
-    ⬅ Back to Expenses
-</a>
 
 </body>
 </html>
