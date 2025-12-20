@@ -57,11 +57,15 @@ def delete_expense(request, id):
    
 
 @login_required
-def monthly_summary():
+def monthly_summary(request):
     month_expenses = Expense.objects.filter(user=request.user).values('date__month').annotate(total=Sum('amount')).order_by('date__month')
 
+    # total for the current month
+    monthly_total_qs = Expense.objects.filter(user=request.user, date__month=now().month).aggregate(total=Sum('amount'))
+    monthly_total = monthly_total_qs['total'] or 0
+
     return render(request, 'expenses/monthly_summary.html', {
-        'monthly_total': monthly_total['total'],
+        'monthly_total': monthly_total,
         'month_expenses': month_expenses
     })
 
