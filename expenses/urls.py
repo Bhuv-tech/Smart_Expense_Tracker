@@ -9,6 +9,9 @@ urlpatterns = [
     path('delete/<int:id>/', views.delete_expense, name='delete_expense'),
     path('summary/', views.monthly_summary, name='monthly_summary'),
     path('category-summary/', views.category_summary, name='category_summary'),
+    # main charts URL
+    path('charts/', views.charts_view, name='charts'),
+    # alias for backwards compatibility with tests
     path('charts/', views.charts_view, name='charts_view'),
     path('login/', auth_views.LoginView.as_view(template_name='expenses/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='expenses/logout.html'), name='logout'),

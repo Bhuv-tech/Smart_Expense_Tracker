@@ -4,7 +4,7 @@ from django.urls import reverse
 
 class URLNamesTest(TestCase):
     def test_charts_view_reverse(self):
-        url = reverse('charts_view')
+        url = reverse('charts')
         self.assertEqual(url, '/charts/')
 
 
@@ -19,7 +19,7 @@ class ViewsRenderTest(TestCase):
 
         user = User.objects.create_user('tester', 't@example.com', 'password')
         self.client.login(username='tester', password='password')
-        resp = self.client.get(reverse('expense_logout'))
+        resp = self.client.get(reverse('logout'))
         # should redirect (302) after logout
         self.assertIn(resp.status_code, (302, 301))
 
@@ -35,7 +35,7 @@ class ViewsRenderTest(TestCase):
 
         user = User.objects.create_user('tester2', 't2@example.com', 'password')
         self.client.login(username='tester2', password='password')
-        resp = self.client.get(reverse('expense_logout'), follow=True)
+        resp = self.client.get(reverse('logout'), follow=True)
         # final response should be 200 and should not be an error page
         self.assertEqual(resp.status_code, 200, msg=f"status {resp.status_code}, redirect_chain={resp.redirect_chain}, final_path={resp.request.get('PATH_INFO')}")
         content = resp.content.decode()
