@@ -2,7 +2,7 @@
 
 🔗 **Live App:** https://smart-expense-tracker-9oj0.onrender.com/
 
-🛠 **Built by:** @Bhuv-tech
+🛠 **Built by:** [@Bhuv-tech](https://github.com/Bhuv-tech)
 
 ---
 
