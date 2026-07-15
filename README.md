@@ -58,16 +58,14 @@ The application enables users to:
 
 ```
 Smart-Expense-Tracker/
-
-├── Expense_Tracker/        # Django project settings
-├── expenses/               # Expense management application
-├── templates/              # HTML templates
-├── static/                 # CSS, JavaScript & Images
-├── manage.py               # Django management script
-├── requirements.txt        # Python dependencies
-├── Procfile                # Deployment configuration
-├── runtime.txt             # Python runtime version
-└── README.md               # Project documentation
+├── Expense_Tracker/                   # Django project configuration
+├── expenses/                          # Expense management application
+├── Procfile                           # Deployment configuration
+├── README.md                          # Project documentation
+├── db.sqlite3                         # SQLite database
+├── manage.py                          # Django management script
+├── requirements.txt                   # Python dependencies
+└── runtime.txt                        # Python runtime version
 ```
 
 ---
