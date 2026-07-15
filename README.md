@@ -48,8 +48,9 @@ The application enables users to:
 
 # 📸 Screenshots
 
-<img width="1883" height="1011" alt="Screenshot 2026-07-15 152641" src="https://github.com/user-attachments/assets/2e8c61ed-7b6a-474a-b2f4-bb0dd32c19f0" />
 <img width="1897" height="1015" alt="Screenshot 2026-07-15 152605" src="https://github.com/user-attachments/assets/7ad37d8f-2c3f-4ff7-bd86-ed7e295390ea" />
+<img width="1883" height="1011" alt="Screenshot 2026-07-15 152641" src="https://github.com/user-attachments/assets/2e8c61ed-7b6a-474a-b2f4-bb0dd32c19f0" />
+
 
 ---
 
