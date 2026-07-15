@@ -89,6 +89,6 @@ Smart-Expense-Tracker/
 
 GitHub: https://github.com/Bhuv-tech
 
-LinkedIn: linkedin.com/in/bhuvaneshwari-mohan-5b780034a
+LinkedIn: https://linkedin.com/in/bhuvaneshwari-mohan-5b780034a
 
 Portfolio: https://bhuvanaportfolio-one.vercel.app/
